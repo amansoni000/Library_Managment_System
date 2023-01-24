@@ -1,4 +1,4 @@
-package com.lms.lms.services.issue_return;
+package com.lms.lms.services;
 
 import com.lms.lms.dao.Issue_ReturnService;
 import com.lms.lms.entiry.Issue_Return;
@@ -93,14 +93,13 @@ public class Issue_ReturnJDBC implements Issue_ReturnService {
                   Date date = new Date();
                   Calendar cal = Calendar.getInstance();
                   cal.setTime(date);
-                  cal.add(Calendar.DAY_OF_MONTH, -10);
 
                   newIssueReturn.addValue("issue_date", cal.getTime());
 
                   newIssueReturn.addValue("return_date", null);
 
                   cal.setTime(date);
-                  cal.add(Calendar.DAY_OF_MONTH, -5);
+                  cal.add(Calendar.DAY_OF_MONTH, 10);
 
                   newIssueReturn.addValue("expected_return_date", cal.getTime());
                   newIssueReturn.addValue("fine", 0);
@@ -153,7 +152,6 @@ public class Issue_ReturnJDBC implements Issue_ReturnService {
         String query = "UPDATE issue_return SET fine = CASE WHEN DATEDIFF(:date, expected_return_date) > 0 THEN DATEDIFF(:date, expected_return_date)*10 ELSE 0 END WHERE status = 'Issued'";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("date", date);
-
         namedParameterJdbcTemplate.update(query, mapSqlParameterSource);
     }
 
