@@ -35,19 +35,26 @@ public class UserServiceJDBC implements UserService {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Users> getAllIssuedUsers() throws SQLException {
-        String query = " select * from users u inner join issue_return ir on ir.user_id =u.id inner join books b on ir.book_id =b.book_id where ir.status = 'Issued'";
+    public List<Users> getAllUsers() {
+        String query = " select * from users u LEFT join issue_return ir on ir.user_id =u.id LEFT join books b on ir.book_id =b.book_id";
         return jdbcTemplate.query(query, new ResultSetExtractor<List<Users>>() {
             @Override
             public List<Users> extractData(ResultSet rs) throws SQLException, DataAccessException {
                 Map<Integer, Users> map = new HashMap<>();
 
                 while(rs.next()){
-                    Users users = map.getOrDefault(rs.getInt("user_id"), new Users());
+                    Users users = map.getOrDefault(rs.getInt("id"), new Users());
                     users.setId(rs.getInt("id"));
                     users.setName(rs.getString("name"));
                     users.setContactNo(rs.getString("contact_no"));
                     users.setGender(rs.getString("gender"));
+
+                    String temp =  rs.getString("status");
+                    if(temp == null){
+                        map.put(rs.getInt("id"), users);
+                        continue;
+                    }
+                    if(temp.equals("Returned")) continue;
 
                     List<Books> book_list = users.getIssuedList() == null ? new ArrayList<>() : users.getIssuedList();
                     Books books = new Books();
@@ -119,12 +126,12 @@ public class UserServiceJDBC implements UserService {
 
     }
 
-    @Override
-    public List<Users> getAllUsers() {
-        String query = "SELECT * FROM users";
-        RowMapper<Users> mapper = new UserMapper();
-        return jdbcTemplate.query(query, mapper);
-    }
+//    @Override
+//    public List<Users> getAllUsers() {
+//        String query = "SELECT * FROM users";
+//        RowMapper<Users> mapper = new UserMapper();
+//        return jdbcTemplate.query(query, mapper);
+//    }
 
 
 }

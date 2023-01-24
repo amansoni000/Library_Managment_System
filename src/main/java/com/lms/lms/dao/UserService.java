@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
-    public List<Users> getAllIssuedUsers() throws SQLException;
+//    public List<Users> getAllIssuedUsers() throws SQLException;
 
     Users getUser(String id);
 
