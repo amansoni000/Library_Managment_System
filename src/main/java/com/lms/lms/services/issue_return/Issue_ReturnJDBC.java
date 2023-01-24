@@ -2,14 +2,16 @@ package com.lms.lms.services.issue_return;
 
 import com.lms.lms.dao.Issue_ReturnService;
 import com.lms.lms.entiry.Issue_Return;
-import com.lms.lms.mappers.IssueReturnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 
@@ -23,23 +25,51 @@ public class Issue_ReturnJDBC implements Issue_ReturnService {
     @Override
     public List<Issue_Return> getAllIssuedReturnedBooks() {
         String query = "SELECT * FROM issue_return";
-        RowMapper<Issue_Return> IssueReturnList = new IssueReturnMapper();
-        return jdbcTemplate.query(query, IssueReturnList);
+        return jdbcTemplate.query(query, new ResultSetExtractor<List<Issue_Return>>() {
+            @Override
+            public List<Issue_Return> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                List<Issue_Return> new_list = new ArrayList<>();
+                while (rs.next()) {
+                    Issue_Return new_issue_return = new Issue_Return();
+
+                    new_issue_return.setUser_id(rs.getInt("user_id"));
+                    new_issue_return.setBookId(rs.getInt("book_id"));
+                    new_issue_return.setIssueDate(rs.getDate("issue_date"));
+                    new_issue_return.setReturnDate(rs.getDate("return_date"));
+                    new_issue_return.setExpected_return_date(rs.getDate("expected_return_date"));
+                    new_issue_return.setStatus(rs.getString("status"));
+                    new_issue_return.setFine(rs.getInt("fine"));
+                    new_list.add(new_issue_return);
+                }
+                return new_list;
+            }
+        });
     }
 
     @Override
     public List<Issue_Return> getUserBooks(String userId) {
         String query = "SELECT * FROM issue_return WHERE user_id = ?";
-        RowMapper<Issue_Return> Issue_Return = new IssueReturnMapper();
-        return jdbcTemplate.query(query, Issue_Return, userId);
+        return jdbcTemplate.query(query, new Object[] {Integer.parseInt(userId)}, new ResultSetExtractor<List<Issue_Return>>() {
+            @Override
+            public List<Issue_Return> extractData(ResultSet rs) throws SQLException, DataAccessException {
+                List<Issue_Return> new_list = new ArrayList<>();
+                while (rs.next()) {
+                    Issue_Return new_issue_return = new Issue_Return();
+
+                    new_issue_return.setUser_id(rs.getInt("user_id"));
+                    new_issue_return.setBookId(rs.getInt("book_id"));
+                    new_issue_return.setIssueDate(rs.getDate("issue_date"));
+                    new_issue_return.setReturnDate(rs.getDate("return_date"));
+                    new_issue_return.setExpected_return_date(rs.getDate("expected_return_date"));
+                    new_issue_return.setStatus(rs.getString("status"));
+                    new_issue_return.setFine(rs.getInt("fine"));
+                    new_list.add(new_issue_return);
+                }
+                return new_list;
+            }
+        });
 
     }
-//    @Override
-//    public List<UserIssuedBooks> getUserIssuedBooks(String userId) {
-//        String query = "SELECT * FROM issue_return WHERE user_id = ? AND status = 'Issued'";
-//        RowMapper<UserIssuedBooks> userIssuedBooks = new UserIssueMapper();
-//        return jdbcTemplate.query(query, userIssuedBooks, userId);
-//    }
 
     @Override
     public int issueBook(String id, String bookId) {

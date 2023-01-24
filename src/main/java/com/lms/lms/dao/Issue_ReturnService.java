@@ -16,5 +16,4 @@ public interface Issue_ReturnService {
 
     void updateFine();
 
-//    List<UserIssuedBooks> getUserIssuedBooks(String userId);
 }

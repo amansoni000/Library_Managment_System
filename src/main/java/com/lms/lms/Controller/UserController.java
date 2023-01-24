@@ -16,12 +16,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // Getting all the users details with their respective issued books list
-//    @GetMapping("issued")
-//    public List<Users> getAllIssuedUsers() throws SQLException {
-//        return userService.getAllIssuedUsers();
-//    }
-
     // Getting all the user details
     @GetMapping
     public List<Users> getAllUsers(){

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
-//    public List<Users> getAllIssuedUsers() throws SQLException;
 
     Users getUser(String id);
 
@@ -17,9 +16,6 @@ public interface UserService {
     int updateUser(Users users);
 
     void deleteUser(int parseInt);
-
-
-    void updateBookList();
 
     List<Users> getAllUsers();
 }
