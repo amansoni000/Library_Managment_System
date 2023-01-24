@@ -11,17 +11,20 @@ import java.text.ParseException;
 import java.util.List;
 
 @RestController
+@RequestMapping("home/users/issue_return")
 public class IssueReturnController {
 
     @Autowired
     private Issue_ReturnService issueReturnService;
 
-    @GetMapping("home/users/issue_return")
-    public List<Issue_Return> getAllIssuedBooks(){
-        return issueReturnService.getAllIssuedBooks();
+    // Getting all the issued and returned books database
+    @GetMapping
+    public List<Issue_Return> getAllIssuedReturnedBooks(){
+        return issueReturnService.getAllIssuedReturnedBooks();
     }
 
-    @GetMapping("/home/users/issue_return/{user_id}")
+    // Getting the issued books by user id
+    @GetMapping("{user_id}")
     public List<Issue_Return> getUserBooks(@PathVariable String user_id){
         return issueReturnService.getUserBooks(user_id);
     }
@@ -30,13 +33,16 @@ public class IssueReturnController {
 //    public List<UserIssuedBooks> getUserIssuedBooks(@PathVariable String user_id){
 //        return issueReturnService.getUserIssuedBooks(user_id);
 //    }
+
+    // Scheduler for updating fine for each 10 seconds
     @Scheduled(cron = "*/10 * * * * *")
-    @GetMapping("/home/users/issue_return/fine")
+    @GetMapping("fine")
     public void updateFine(){
         issueReturnService.updateFine();
     }
 
-    @PostMapping("/home/users/issue_return/{user_id}/{book_id}")
+    // API FOR issuing a book for user id and book id
+    @PostMapping("{user_id}/{book_id}")
     public String issueBook(@PathVariable("user_id") String id,@PathVariable("book_id")  String book_id){
         int result = issueReturnService.issueBook(id, book_id);
         if(result == 1){
@@ -56,7 +62,8 @@ public class IssueReturnController {
         }
     }
 
-    @PutMapping("/home/users/issue_return/{user_id}/{book_id}")
+    // API for returning book by user id and book id
+    @PutMapping("{user_id}/{book_id}")
     public String returnBook(@PathVariable("user_id") String id, @PathVariable("book_id") String book_id) throws ParseException {
         int result = issueReturnService.returnBook(id, book_id);
         if(result == 0){

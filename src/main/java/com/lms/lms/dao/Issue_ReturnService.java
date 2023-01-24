@@ -6,7 +6,7 @@ import com.lms.lms.entiry.Issue_Return;
 import java.util.List;
 
 public interface Issue_ReturnService {
-    List<Issue_Return> getAllIssuedBooks();
+    List<Issue_Return> getAllIssuedReturnedBooks();
 
     List<Issue_Return> getUserBooks(String userId);
 

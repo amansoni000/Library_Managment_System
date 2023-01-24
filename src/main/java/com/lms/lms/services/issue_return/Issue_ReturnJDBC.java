@@ -21,7 +21,7 @@ public class Issue_ReturnJDBC implements Issue_ReturnService {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Override
-    public List<Issue_Return> getAllIssuedBooks() {
+    public List<Issue_Return> getAllIssuedReturnedBooks() {
         String query = "SELECT * FROM issue_return";
         RowMapper<Issue_Return> IssueReturnList = new IssueReturnMapper();
         return jdbcTemplate.query(query, IssueReturnList);
