@@ -29,11 +29,6 @@ public class IssueReturnController {
         return issueReturnService.getUserBooks(user_id);
     }
 
-//    @GetMapping("/home/users/issue_return/{user_id}/issued")
-//    public List<UserIssuedBooks> getUserIssuedBooks(@PathVariable String user_id){
-//        return issueReturnService.getUserIssuedBooks(user_id);
-//    }
-
     // Scheduler for updating fine for each 10 seconds
     @Scheduled(cron = "*/10 * * * * *")
     @GetMapping("fine")
